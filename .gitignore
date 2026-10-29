@@ -1,0 +1,15 @@
+# IDE
+.vs/
+*.user
+*.suo
+
+# Сборка
+bin/
+obj/
+global_packages/
+
+# Тесты
+TestResults/
+
+# Ключи подписи
+*.pfx
