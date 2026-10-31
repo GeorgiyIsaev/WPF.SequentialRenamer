@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Tests.SequentialRenamer</RootNamespace>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\WPF.SequentialRenamer\Models\**\*.cs" LinkBase="Linked\Models" />
+    <Compile Include="..\WPF.SequentialRenamer\Utils\**\*.cs" LinkBase="Linked\Utils" />
+    <Compile Include="..\WPF.SequentialRenamer\Services\**\*.cs" LinkBase="Linked\Services" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0-preview-24080-01" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+  </ItemGroup>
+</Project>

@@ -5,8 +5,113 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF.SequentialRenamer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="WPF Sequential Renamer" Height="600" Width="1000"
+        Icon="icon.png">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Файлы">
+                <MenuItem Header="Открыть папку..." Click="MenuItem_OpenFolder_Click"/>
+            </MenuItem>
+            <MenuItem Header="Конфигурации">
+                <MenuItem x:Name="MenuItem_FilesMode" Header="Переименовать файлы"
+                          IsCheckable="True" IsChecked="True" Click="MenuItem_FilesMode_Click"/>
+                <MenuItem x:Name="MenuItem_FoldersMode" Header="Переименовать папки"
+                          IsCheckable="True" Click="MenuItem_FoldersMode_Click"/>
+            </MenuItem>
+        </Menu>
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+            <Button DockPanel.Dock="Left" x:Name="Button_GoUp" Content="↑ Вверх" Width="80"
+                    Margin="6,4,4,4" Padding="4,2" IsEnabled="False" Click="Button_GoUp_Click"/>
+            <TextBlock x:Name="Label_RootPath" Text="Папка не открыта" FontWeight="Bold" Padding="6,4,6,2"/>
+        </DockPanel>
+
+        <Grid Margin="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="250"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Левая колонка: папки сверху, файлы снизу-->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!--Блок 1: папки открытой папки-->
+                <GroupBox Grid.Row="0" Header="Папки">
+                    <ListView x:Name="ListView_Folders" SelectionChanged="ListView_Folders_SelectionChanged"
+                              MouseDoubleClick="ListView_Folders_MouseDoubleClick"
+                              ContextMenuOpening="ListView_Folders_ContextMenuOpening">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Папка" Width="170" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="Файлов" Width="60" DisplayMemberBinding="{Binding FileCount}"/>
+                                <GridViewColumn Header="Папок" Width="60" DisplayMemberBinding="{Binding SubfolderCount}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                              ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Background="#E0E0E0"/>
+
+                <!--Блок 2: файлы выбранной папки-->
+                <GroupBox Grid.Row="2" Header="Файлы (выберите папку выше)" x:Name="GroupBox_Files">
+                    <ListView x:Name="ListView_Files">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Имя" Width="220" DisplayMemberBinding="{Binding NameWithoutExt}"/>
+                                <GridViewColumn Header="Расширение" Width="80" DisplayMemberBinding="{Binding Extension}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+            </Grid>
+
+            <!--Разделитель левой колонки и панели конфигурации-->
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                          ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" Background="#E0E0E0"/>
+
+            <!--Блок 3: конфигурация переименования-->
+            <GroupBox Grid.Column="2" Header="Переименование" Margin="6,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="Префикс:"/>
+                    <TextBox x:Name="TextBox_Prefix" TextChanged="Config_TextChanged"/>
+
+                    <!--Средняя строка: начало счётчика и количество цифр рядом-->
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Начать счётчик с:" TextWrapping="Wrap"/>
+                            <TextBox x:Name="TextBox_StartNumber" Text="1" TextChanged="Config_TextChanged"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Цифр в счётчике:" TextWrapping="Wrap"/>
+                            <ComboBox x:Name="ComboBox_Digits" SelectionChanged="ComboBox_Digits_SelectionChanged"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="Суффикс:" Margin="0,8,0,0"/>
+                    <TextBox x:Name="TextBox_Suffix" TextChanged="Config_TextChanged"/>
+
+                    <TextBlock x:Name="Label_RenameMode" Margin="0,10,0,0"
+                           Text="Режим: Переименование файлов&#10;Пример имени: 001.jpg"/>
+
+                    <Button x:Name="Button_Rename" Content="Переименовать файлы"
+                            Margin="0,6,0,0" Padding="4" Click="Button_Rename_Click"/>
+                    <Button x:Name="Button_MoveFilesUp" Content="Поднять файлы из подпапок"
+                            Margin="0,8,0,0" Padding="4" Click="Button_MoveFilesUp_Click"/>
+                    <Button x:Name="Button_Undo" Content="Отмена" Margin="0,14,0,0" Padding="4"
+                            IsEnabled="False" Click="Button_Undo_Click"/>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
 </Window>
